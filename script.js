@@ -3,6 +3,25 @@ const taskInput = document.getElementById("task-input");
 const addBtn = document.getElementById("add-btn");
 const taskList = document.getElementById("task-list");
 
+// Create "Clear All" button dynamically
+const clearAllBtn = document.createElement("button");
+clearAllBtn.textContent = "Clear All";
+clearAllBtn.id = "clear-all-btn";
+clearAllBtn.style.marginTop = "10px";
+clearAllBtn.style.padding = "10px 15px";
+clearAllBtn.style.border = "none";
+clearAllBtn.style.borderRadius = "6px";
+clearAllBtn.style.background = "#dc3545";
+clearAllBtn.style.color = "#fff";
+clearAllBtn.style.cursor = "pointer";
+clearAllBtn.style.width = "100%";
+clearAllBtn.style.fontSize = "14px";
+clearAllBtn.style.transition = "background 0.3s";
+clearAllBtn.addEventListener("mouseover", () => (clearAllBtn.style.background = "#a71d2a"));
+clearAllBtn.addEventListener("mouseout", () => (clearAllBtn.style.background = "#dc3545"));
+
+document.querySelector(".app-container").appendChild(clearAllBtn);
+
 // Load tasks from local storage or start empty
 let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
 
@@ -77,11 +96,28 @@ function editTask(index) {
   }
 }
 
-// Delete task
+// Delete task (with confirmation)
 function deleteTask(index) {
-  tasks.splice(index, 1);
-  renderTasks();
+  const confirmDelete = confirm("Are you sure you want to delete this task?");
+  if (confirmDelete) {
+    tasks.splice(index, 1);
+    renderTasks();
+  }
 }
+
+// Clear all tasks (with confirmation)
+clearAllBtn.addEventListener("click", () => {
+  if (tasks.length === 0) {
+    alert("No tasks to clear!");
+    return;
+  }
+
+  const confirmClear = confirm("Are you sure you want to clear all tasks?");
+  if (confirmClear) {
+    tasks = [];
+    renderTasks();
+  }
+});
 
 // Event listeners
 addBtn.addEventListener("click", addTask);
